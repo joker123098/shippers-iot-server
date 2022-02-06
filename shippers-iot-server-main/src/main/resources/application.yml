@@ -1,0 +1,59 @@
+server:
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  http2:
+    enabled: true
+  shutdown: graceful
+  port: 8181
+spring:
+  cloud:
+    stream:
+      bindings:
+        devicePosition-out-0:
+          destination: wh-cat-exchange
+      rabbit:
+        bindings:
+          producer:
+            bindQueue: false
+            declareExchange: false
+            routingKeyExpression: '''event'''
+  codec:
+    max-in-memory-size: 20MB
+  lifecycle:
+    timeout-per-shutdown-phase: 3
+  security:
+    user:
+      name: cat
+      password: password
+  web:
+    resources:
+      cache:
+        period: 31536000
+        cachecontrol:
+          max-age: 31536000
+      chain:
+        enabled: true
+        strategy:
+          content:
+            enabled: true
+            paths: /webjars/swagger-ui/**.*
+management:
+  health:
+    mongo:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+#logging:
+#  level:
+#    com.hookiesolutions.cat.prototype.web: DEBUG
+#    com.hookiesolutions.cat.prototype.config: DEBUG
+##    org.springframework.data: DEBUG
